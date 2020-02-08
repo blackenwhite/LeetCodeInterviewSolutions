@@ -1,2 +1,2 @@
 # LeetCodeInterviewSolutions
-It contains all the top interview questions solutions 
+It will contain all the top interview questions solutions (Hopefully!)
