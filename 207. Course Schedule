@@ -1,0 +1,72 @@
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+ 
+
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+
+ 
+
+Constraints:
+
+    The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+    You may assume that there are no duplicate edges in the input prerequisites.
+    1 <= numCourses <= 10^5
+
+
+-------------------------------Solution-----------------------------
+class Solution {
+public:
+    vector<vector<int>> graph;
+    vector<int> color;
+    
+    void add_node(int u, int v) {
+        graph[u].push_back(v);
+    }   
+    
+    bool dfs(int u) {
+        if (color[u] == 2) return true;
+        color[u] = 1;
+        for (auto v:graph[u]) {
+            if (color[v] == 2) continue;            // very imp step to reduce complexity and do not return else color[u] will remain 1.. ;)
+            if (color[v] == 1) return false;
+            if (!dfs(v)) return false;
+        }
+        color[u] = 2;  
+        return true;
+    }
+    
+    bool canFinish(int numCourses, vector<pair<int, int>>& inp) {      
+        graph.resize(numCourses);
+        color.assign(numCourses, 0);
+    
+        for (int i = 0; i < inp.size(); i++) {
+            int u = inp[i].first;
+            int v = inp[i].second;
+            add_node(u, v);
+        }
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (color[i] == 0) {
+                if (!dfs(i)) return false;
+            }
+        }
+        return true;
+    }
+};
